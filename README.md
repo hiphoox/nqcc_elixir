@@ -12,3 +12,6 @@
 
 - nqcc file_name.c
 - nqcc --help
+
+## Examples
+- $ nqcc ./examples/return_2.c
