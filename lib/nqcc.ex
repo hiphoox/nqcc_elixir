@@ -34,6 +34,8 @@ defmodule Nqcc do
     |> IO.inspect()
     |> Parser.parse_program()
     |> IO.inspect()
+    |> CodeGenerator.generate_code()
+    |> IO.puts()
   end
 
   defp print_help_message do

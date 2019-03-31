@@ -8,7 +8,7 @@ defmodule Parser do
 
       {function_node, rest} ->
         if rest == [] do
-          {:program, function_node}
+          %AST{node_name: :program, left_node: function_node}
         else
           {:error, "Error: there are more elements after function end"}
         end
@@ -37,7 +37,7 @@ defmodule Parser do
 
                 {statement_node, [next_token | rest]} ->
                   if next_token == :close_brace do
-                    {{:function, :main, statement_node}, rest}
+                    {%AST{node_name: :function, value: :main, left_node: statement_node}, rest}
                   else
                     {{:error, "Error, close brace missed"}, rest}
                   end
@@ -69,7 +69,7 @@ defmodule Parser do
 
         {exp_node, [next_token | rest]} ->
           if next_token == :semicolon do
-            {{:return, exp_node}, rest}
+            {%AST{node_name: :return, left_node: exp_node}, rest}
           else
             {{:error, "Error: semicolon missed after constant to finish return statement"}, rest}
           end
@@ -81,7 +81,7 @@ defmodule Parser do
 
   def parse_expression([next_token | rest]) do
     case next_token do
-      {:constant, value} -> {{:constant, :int, value}, rest}
+      {:constant, value} -> {%AST{node_name: :constant, value: value}, rest}
       _ -> {{:error, "Error: constant value missed"}, rest}
     end
   end
