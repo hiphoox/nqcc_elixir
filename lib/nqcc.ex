@@ -29,7 +29,11 @@ defmodule Nqcc do
 
     File.read!(file_name)
     |> Sanitizer.sanitize_source()
+    |> IO.inspect()
     |> Lexer.scan_words()
+    |> IO.inspect()
+    |> Parser.parse_program()
+    |> IO.inspect()
   end
 
   defp print_help_message do
