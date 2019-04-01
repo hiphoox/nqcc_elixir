@@ -16,26 +16,29 @@ defmodule CodeGenerator do
   end
 
   def emit_code(:program, code_snippet, _) do
-    ~s(
-        .section  __TEXT,__text,regular,pure_instructions
-        .p2align  4, 0x90) <> code_snippet
+    """
+        .section        __TEXT,__text,regular,pure_instructions
+        .p2align        4, 0x90
+    """ <>
+      code_snippet
   end
 
   def emit_code(:function, code_snippet, :main) do
-    ~s(
-        .globl    _main         ## -- Begin function main
-    _main:                      ## @main
-    ) <> code_snippet
+    """
+        .globl  _main                   ## -- Begin function main
+    _main:                              ## @main
+    """ <>
+      code_snippet
   end
 
   def emit_code(:return, code_snippet, _) do
-    ~s(
-    movl    #{code_snippet}, %eax
-    ret
-    )
+    """
+        movl    #{code_snippet}, %eax
+        ret
+    """
   end
 
   def emit_code(:constant, _code_snippet, value) do
-    "#{value}"
+    "$#{value}"
   end
 end

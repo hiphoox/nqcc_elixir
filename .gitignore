@@ -25,3 +25,8 @@ nqcc-*.tar
 .elixir_ls/
 
 nqcc
+
+examples/return_2
+examples/*.s
+
+.DS_Store

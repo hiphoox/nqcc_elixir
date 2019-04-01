@@ -35,7 +35,7 @@ defmodule Nqcc do
     |> Parser.parse_program()
     |> IO.inspect()
     |> CodeGenerator.generate_code()
-    |> IO.puts()
+    |> Linker.generate_binary(file_name)
   end
 
   defp print_help_message do
