@@ -1,6 +1,9 @@
 defmodule CodeGenerator do
   def generate_code(ast) do
-    post_order(ast)
+    code = post_order(ast)
+    IO.puts("\nCode Generator output:")
+    IO.puts(code)
+    code
   end
 
   def post_order(node) do
@@ -10,7 +13,8 @@ defmodule CodeGenerator do
 
       ast_node ->
         code_snippet = post_order(ast_node.left_node)
-        # post_order(right_node)
+        # TODO: Falta terminar de implementar cuando el arbol tiene mas ramas
+        post_order(ast_node.right_node)
         emit_code(ast_node.node_name, code_snippet, ast_node.value)
     end
   end
@@ -25,8 +29,8 @@ defmodule CodeGenerator do
 
   def emit_code(:function, code_snippet, :main) do
     """
-        .globl  _main                   ## -- Begin function main
-    _main:                              ## @main
+        .globl  _main         ## -- Begin function main
+    _main:                    ## @main
     """ <>
       code_snippet
   end

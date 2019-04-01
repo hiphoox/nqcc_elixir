@@ -24,18 +24,19 @@ defmodule Nqcc do
     compile_file(file_name)
   end
 
-  defp compile_file(file_name) do
-    IO.puts("Compiling file: " <> file_name)
+  defp compile_file(file_path) do
+    IO.puts("Compiling file: " <> file_path)
+    assembly_path = String.replace_trailing(file_path, ".c", ".s")
 
-    File.read!(file_name)
+    File.read!(file_path)
     |> Sanitizer.sanitize_source()
-    |> IO.inspect()
+    |> IO.inspect(label: "\nSanitizer ouput")
     |> Lexer.scan_words()
-    |> IO.inspect()
+    |> IO.inspect(label: "\nLexer ouput")
     |> Parser.parse_program()
-    |> IO.inspect()
+    |> IO.inspect(label: "\nParser ouput")
     |> CodeGenerator.generate_code()
-    |> Linker.generate_binary(file_name)
+    |> Linker.generate_binary(assembly_path)
   end
 
   defp print_help_message do
