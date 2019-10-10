@@ -7,6 +7,9 @@ defmodule Lexer do
     case Regex.run(~r/^\d+/, program) do
       [value] ->
         {{:constant, String.to_integer(value)}, String.trim_leading(program, value)}
+
+      program ->
+        {:error, "Token not valid: #{program}"}
     end
   end
 
@@ -41,8 +44,12 @@ defmodule Lexer do
           get_constant(rest)
       end
 
-    remaining_tokens = lex_raw_tokens(rest)
-    [token | remaining_tokens]
+    if token != :error do
+      remaining_tokens = lex_raw_tokens(rest)
+      [token | remaining_tokens]
+    else
+      [:error]
+    end
   end
 
   def lex_raw_tokens(_program) do
