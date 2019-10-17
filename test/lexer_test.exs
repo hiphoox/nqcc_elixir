@@ -14,28 +14,6 @@ defmodule LexerTest do
        {:constant, 2},
        :semicolon,
        :close_brace
-     ],
-     tokens_0: [
-       :int_keyword,
-       :main_keyword,
-       :open_paren,
-       :close_paren,
-       :open_brace,
-       :return_keyword,
-       {:constant, 0},
-       :semicolon,
-       :close_brace
-     ],
-     tokens_100: [
-       :int_keyword,
-       :main_keyword,
-       :open_paren,
-       :close_paren,
-       :open_brace,
-       :return_keyword,
-       {:constant, 100},
-       :semicolon,
-       :close_brace
      ]}
   end
 
@@ -61,7 +39,8 @@ defmodule LexerTest do
 
     s_code = Sanitizer.sanitize_source(code)
 
-    assert Lexer.scan_words(s_code) == state[:tokens_0]
+    expected_result = List.update_at(state[:tokens], 6, fn _ -> {:constant, 0} end)
+    assert Lexer.scan_words(s_code) == expected_result
   end
 
   test "multi_digit", state do
@@ -73,7 +52,8 @@ defmodule LexerTest do
 
     s_code = Sanitizer.sanitize_source(code)
 
-    assert Lexer.scan_words(s_code) == state[:tokens_100]
+    expected_result = List.update_at(state[:tokens], 6, fn _ -> {:constant, 100} end)
+    assert Lexer.scan_words(s_code) == expected_result
   end
 
   test "new_lines", state do
@@ -128,25 +108,16 @@ defmodule LexerTest do
   end
 
   # tests to fail
-  test "wrong case" do
+  test "wrong case", state do
     code = """
     int main() {
-      RETURN 0;
+      RETURN 2;
     }
     """
 
     s_code = Sanitizer.sanitize_source(code)
 
-    assert Lexer.scan_words(s_code) == [
-             :int_keyword,
-             :main_keyword,
-             :open_paren,
-             :close_paren,
-             :open_brace,
-             :error,
-             {:constant, 0},
-             :semicolon,
-             :close_brace
-           ]
+    expected_result = List.update_at(state[:tokens], 5, fn _ -> :error end)
+    assert Lexer.scan_words(s_code) == expected_result
   end
 end
